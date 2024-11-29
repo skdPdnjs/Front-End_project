@@ -1,0 +1,95 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #fef6e4;
+}
+
+.container {
+    max-width: 1000px;
+    margin: 20px auto;
+    padding: 20px;
+    border: 1px solid #dccbc4;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    background-color: #fffbe7;
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #5d7a47;
+}
+
+.grade-selector {
+    text-align: center;
+    margin: 20px 0;
+    font-size: 16px;
+}
+
+.grade-selector select {
+    font-size: 16px;
+    padding: 5px;
+    margin-left: 5px;
+    background-color: #eaf1df;
+    border: 1px solid #bfcbb3;
+    border-radius: 4px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    background-color: #f8f6ef;
+}
+
+th,
+td {
+    border: 1px solid #d6d3cb;
+    padding: 10px;
+    text-align: center;
+}
+
+thead th {
+    background-color: #e8dabe;
+    font-weight: bold;
+    color: #5d5a41;
+}
+
+tbody tr:nth-child(even) {
+    background-color: #f2eedc;
+}
+
+tfoot td {
+    font-weight: bold;
+    background-color: #d9e2cc;
+    color: #4b6040;
+    text-align: center;
+    padding: 10px;
+}
+
+button {
+    margin: 5px;
+    padding: 10px 15px;
+    font-size: 14px;
+    cursor: pointer;
+    border: none;
+    background-color: #86c287;
+    color: white;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #639e65;
+}
+
+.grade-f {
+    color: #c0392b;
+    font-weight: bold;
+}
+
+.invalid-input {
+    border: 2px solid red;
+}
+

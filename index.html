@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>학점 관리 시스템</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <h1>학점 관리 시스템</h1>
+  
+    <!-- 학년 선택 박스 -->
+    <div class="grade-selector">
+      <label for="yearSelect">학년:</label>
+      <select id="yearSelect" onchange="changeYear()">
+        <option value="1">1학년</option>
+        <option value="2">2학년</option>
+        <option value="3">3학년</option>
+      </select>
+    </div>
+  
+    <!-- 성적 테이블 -->
+    <table id="gradeTable">
+      <thead>
+        <tr>
+          <th>선택</th>
+          <th>이수</th>
+          <th>필수</th>
+          <th>과목명</th>
+          <th>학점</th>
+          <th>출석점수</th>
+          <th>과제점수</th>
+          <th>중간고사</th>
+          <th>기말고사</th>
+          <th>총점</th>
+          <th>평균</th>
+          <th>성적</th>
+        </tr>
+      </thead>
+      <tbody>
+    </tbody>
+    
+      <tfoot>
+        <tr>
+          <td></td>
+          <td colspan="3" style="font-weight: bold; text-align: center;">합계</td>
+          <td id="totalCredits">0</td>
+          <td id="totalAttendance">0</td>
+          <td id="totalAssignment">0</td>
+          <td id="totalMidterm">0</td>
+          <td id="totalFinal">0</td>
+          <td id="totalScore">0</td> <!-- 총점 -->
+          <td id="totalAverage">0.00</td> <!-- 평균 -->
+          <td id="averageGrade">F</td> <!-- 성적 -->
+        </tr>
+      </tfoot>
+    </table>
+  
+    <!-- 버튼 컨트롤 -->
+    <div class="controls">
+      <button onclick="addRow()">추가</button>
+      <button onclick="deleteRow()">삭제</button>
+      <button onclick="saveAndCalculate()">저장</button> <!-- 수정된 부분 -->
+    </div>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>
