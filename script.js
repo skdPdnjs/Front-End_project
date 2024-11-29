@@ -18,16 +18,32 @@ function changeYear() {
     currentYear = parseInt(document.getElementById('yearSelect').value);
     loadTable();
     loadSummary();
+    saveAndCalculate();
+
+    // F 학점 색상 
+    const tableBody = document.getElementById('gradeTable').getElementsByTagName('tbody')[0];
+    const rows = tableBody.rows;
+
+    Array.from(rows).forEach((row) => {
+        const gradeCell = row.cells[11];
+        const grade = gradeCell.textContent;
+
+        if (grade === 'F') {
+            gradeCell.classList.add('grade-f');
+        } else {
+            gradeCell.classList.remove('grade-f');
+        }
+    });
 }
 
 function saveCurrentTable() {
     const tableBody = document.getElementById('gradeTable').getElementsByTagName('tbody')[0];
     const rows = tableBody.rows;
 
-    // 중복 확인을 위한 배열 (현재 테이블의 모든 과목명과 성적 포함)
+    // 중복 확인
     const existingSubjects = [];
 
-    gradeData[currentYear] = []; // 현재 학년 데이터를 초기화
+    gradeData[currentYear] = []; 
 
     for (const row of rows) {
         const name = row.cells[3].querySelector('input').value.trim(); // 과목명
@@ -42,14 +58,13 @@ function saveCurrentTable() {
             grade = row.cells[11].innerText;
         }
 
-        // 중복 검사: 동일 과목명이 존재하고 성적이 F가 아닌 경우
         const duplicate = existingSubjects.find(
             (subject) => subject.name === name && subject.grade !== 'F'
         );
 
         if (duplicate) {
             alert(`"${name}" 과목은 이미 존재하며 F 학점이 아닙니다. 중복 입력이 불가능합니다.`);
-            return; // 중복 발견 시 저장 중단
+            return; 
         }
 
         // 중복 확인 배열에 추가
@@ -75,18 +90,15 @@ function saveCurrentTable() {
     }
 }
 
-
-
 function loadTable() {
     const tableBody = document.getElementById('gradeTable').getElementsByTagName('tbody')[0];
-    tableBody.innerHTML = ''; // 기존 데이터를 초기화
+    tableBody.innerHTML = ''; 
 
     gradeData[currentYear].forEach(rowData => {
         const row = tableBody.insertRow();
         addRowToTable(row, rowData);
     });
 
-    // 유효성 검사 강제 호출
     Array.from(tableBody.rows).forEach((row) => {
         const creditSelect = row.cells[4]?.querySelector('select');
         const attendanceInput = row.cells[5]?.querySelector('input');
@@ -101,9 +113,6 @@ function loadTable() {
         if (finalExamInput) enforceValidRange(finalExamInput);
     });
 }
-
-
-
 
 function saveCurrentSummary() {
     const summary = gradeSummary[currentYear];
@@ -139,8 +148,8 @@ function addRow() {
         category: '교양', 
         requirement: '필수', 
         name: '', 
-        credit: 1, // 기본값을 1학점으로 설정
-        grade: 'P', // P/NP 중 P를 기본값으로 설정
+        credit: 1, 
+        grade: 'P', 
         attendance: null, 
         assignment: null, 
         midterm: null, 
@@ -148,8 +157,6 @@ function addRow() {
         total: null, 
         average: null 
     };
-
-    // 행 추가 및 데이터 반영
     addRowToTable(newRow, rowData);
     gradeData[currentYear].push(rowData);
 }
@@ -158,8 +165,8 @@ function addRow() {
 function saveAndCalculate() {
     saveCurrentTable();
     sortGradeData();
-    loadTable(); // 저장 후 테이블 재로드
-    convertGradeToText(); // 1학점 성적을 텍스트로 변환
+    loadTable(); 
+    convertGradeToText(); // 1학점 성적을 텍스트로 
     calculate();
 }
 
@@ -178,7 +185,7 @@ function sortGradeData() {
 
 function deleteRow() {
     const tableBody = document.getElementById('gradeTable').getElementsByTagName('tbody')[0];
-    const rows = Array.from(tableBody.rows); // 테이블의 모든 행을 배열로 가져오기
+    const rows = Array.from(tableBody.rows); 
 
     // 선택되지 않은 행만 남기기
     const newGradeData = [];
@@ -204,17 +211,14 @@ function deleteRow() {
             newGradeData.push(rowData);
         }
     });
-
-    // 업데이트된 데이터로 교체
     gradeData[currentYear] = newGradeData;
 
-    // 테이블 다시 로드
     loadTable();
     calculate();
 }
 
 function addRowToTable(row, rowData) {
-    const isOneCredit = rowData.credit === 1; // 1학점 여부 확인
+    const isOneCredit = rowData.credit === 1;
     row.innerHTML = `
         <td><input type="checkbox" ${rowData.select ? 'checked' : ''}></td>
         <td>
@@ -255,8 +259,6 @@ function addRowToTable(row, rowData) {
         </td>
     `;
 }
-
-
     if (!isOneCredit) {
         const attendanceInput = row.cells[5].querySelector('input');
         const assignmentInput = row.cells[6].querySelector('input');
@@ -269,13 +271,12 @@ function addRowToTable(row, rowData) {
         finalExamInput.addEventListener('input', () => enforceValidRange(finalExamInput));
     }
 
-
 function enforceValidRange(inputElement) {
     const min = parseInt(inputElement.min, 10);
     const max = parseInt(inputElement.max, 10);
     const value = parseInt(inputElement.value, 10);
 
-    // 값이 범위를 벗어나면 해당 값으로 강제 설정
+    // 값 범위
     if (value < min) {
         inputElement.value = min;
     } else if (value > max) {
@@ -285,7 +286,6 @@ function enforceValidRange(inputElement) {
 
     
     if (!isOneCredit) {
-        // 각 입력 필드에 이벤트 리스너 추가
         const attendanceInput = row.cells[5].querySelector('input');
         const assignmentInput = row.cells[6].querySelector('input');
         const midtermInput = row.cells[7].querySelector('input');
@@ -357,8 +357,6 @@ function updateRow(selectElement) {
         gradeCell.innerText = 'F';
     }
 }
-
-
 function calculate() {
     const rows = document.getElementById('gradeTable').getElementsByTagName('tbody')[0].rows;
     let totalCredits = 0, totalAttendance = 0, totalAssignment = 0, totalMidterm = 0, totalFinal = 0, totalScore = 0, subjectCount = 0;
@@ -370,8 +368,6 @@ function calculate() {
             const grade = row.cells[11].innerText;
             row.cells[10].innerText = '';
         } else {
-            totalCredits += credit;
-
             const attendanceInput = row.cells[5].querySelector('input');
             const assignmentInput = row.cells[6].querySelector('input');
             const midtermInput = row.cells[7].querySelector('input');
@@ -399,20 +395,23 @@ function calculate() {
 
             if (grade === 'F') {
                 row.cells[11].classList.add('grade-f');
+                row.cells[10].innerText = '-'; 
+                continue; // F학점인 과목은 합계 계산에서 제외
             } else {
                 row.cells[11].classList.remove('grade-f');
+                row.cells[10].innerText = '';
+                
+                // F학점이 아닌 과목만 합계에 포함
+                totalCredits += credit;
+                totalAttendance += attendance;
+                totalAssignment += assignment;
+                totalMidterm += midterm;
+                totalFinal += finalExam;
+                totalScore += total;
+                subjectCount++;
             }
-
-            row.cells[10].innerText = '';
-            totalAttendance += attendance;
-            totalAssignment += assignment;
-            totalMidterm += midterm;
-            totalFinal += finalExam;
-            totalScore += total;
-            subjectCount++;
         }
     }
-
     const summary = gradeSummary[currentYear];
     summary.totalCredits = totalCredits;
     summary.totalAttendance = totalAttendance;
@@ -453,7 +452,6 @@ function getOverallGrade(average) {
     return 'F';
 }
 document.addEventListener('DOMContentLoaded', function () {
-    // 초기 데이터 추가
     const rowData = { 
         select: false, 
         category: '교양', 
@@ -473,12 +471,9 @@ document.addEventListener('DOMContentLoaded', function () {
     const newRow = tableBody.insertRow();
     addRowToTable(newRow, rowData);
 
-    // 초기 데이터 로드 및 요약 초기화
     loadTable();
     loadSummary();
 });
-
-
 
 function enforceValidRange(inputElement) {
     const min = parseInt(inputElement.min, 10);
@@ -487,10 +482,9 @@ function enforceValidRange(inputElement) {
 
     if (isNaN(value) || value < min || value > max) {
         alert(`입력 값은 ${min}에서 ${max} 사이여야 합니다.`);
-        inputElement.value = ""; // 잘못된 입력 초기화
+        inputElement.value = ""; 
     }
 }
-
 
 function enforceValidRange(inputElement) {
     const min = parseInt(inputElement.min, 10);
@@ -499,7 +493,7 @@ function enforceValidRange(inputElement) {
 
     if (value < min || value > max) {
         alert(`입력 값은 ${min}에서 ${max} 사이여야 합니다.`);
-        inputElement.value = ""; // 잘못된 입력 초기화
+        inputElement.value = ""; 
     }
 }
 
@@ -511,7 +505,6 @@ function convertGradeToText() {
         const credit = parseInt(row.cells[4].querySelector('select').value);
 
         if (credit === 1) {
-            // 1학점인 경우 P/NP 성적을 텍스트로 변환
             const gradeCell = row.cells[11];
             const gradeSelect = gradeCell.querySelector('select');
 
